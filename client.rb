@@ -33,16 +33,17 @@ options[:concurrency].times do
     substart = Time.now
     Socket.tcp('localhost', 1234) do |connection|
       options[:number].times do
+        # write all
         connection.write "GET / HTTP/1.0\r\n" + 
           "Simple-Header-Size: #{options[:response_header]}\r\n" +
           "Simple-Header: #{"a" * options[:request_header]}\r\n\r\n"
         # read all
         loop do
           begin
-            data = connection.readpartial(1024*10)
+            data = connection.readpartial(1024 * 2)
             break if data.end_with?("\r\n\r\n")
           rescue Errno::EAGAIN
-            retry # buffen not empty
+            retry # buffer not empty, simple re-run again
           rescue EOFError
             break # all data read
           end

@@ -10,14 +10,14 @@ class ThreadServer
         client = Client.new(socket)
         client.msg_connect
         loop do
-          req = client.handle
-          if req && req != ""
-            client.msg_request(req)
-            client.process
-          else
+          request = client.handle_request
+          if request.empty?
             client.msg_disconnect
             client.client.close
             break
+          else
+            resp = client.get_response(request)
+            client.handle_response(resp)
           end
         end
       end # thread
