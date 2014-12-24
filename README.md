@@ -2,12 +2,12 @@
 
 Repository for server implementation examples. Read book `Working with TCP sockets` most of the exaples based on it.
 Implemented few approaches:
-- Simple server. Accept connection and perform all requests for particular user. All other connections wait. Blocking example.
-- Threaded server. Spawn new thread for each client connection. Example of GIL influence.
-- Process server. Spawn new process (duplicate current) for each client connection. Output looks like `threaded` approach but GIL not affecting it.
-- Process pool server. Spawn N processes in the setup process and handle process exception exits with re-spawning new one. Works like `process server`
-- Thread server. Spawn N threads un setup and accept each same as `thread` example. Simple implementation without re-spawning threads.
-- Reactor server. Most intresting example with non-blocking approach. Aka Thin (nodejs) core principle. 
+- Simple server `ruby simple.rb`. Accept connection and perform all requests for particular user. All other connections wait. Blocking example.
+- Threaded server `ruby thread.rb`. Spawn new thread for each client connection. Example of GIL influence.
+- Process server `ruby process.rb`. Spawn new process (duplicate current) for each client connection. Output looks like `threaded` approach but GIL not affecting it.
+- Process pool server `ruby process_pool.rb`. Spawn N processes in the setup process and handle process exception exits with re-spawning new one. Works like `process server`
+- Thread server `ruby thread_pool.rb`. Spawn N threads un setup and accept each same as `thread` example. Simple implementation without re-spawning threads.
+- Reactor server `ruby reactor.rb`. Most intresting example with non-blocking approach. Aka Thin (nodejs) core principle. 
 
 For testing purposes created simple threaded client for making requests.
 `ruby client.rb -c 10 -n 10 -r 1000 -w 10000`
