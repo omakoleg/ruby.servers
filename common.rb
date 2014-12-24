@@ -13,6 +13,8 @@ module Common
       @color = (String.colors - [:black]).sample
     end
     
+    # read data from buffer by small chunks
+    # stop when receiving \r\n\r\n in the end
     def handle_request
       request = ""
       loop do
@@ -21,8 +23,9 @@ module Common
           msg_request
           break if request.end_with?("\r\n\r\n")
         rescue Errno::EAGAIN
+          # buffer not empty, wait availability
           IO.select([@client], nil, nil)
-          retry # buffen not empty
+          retry
         rescue EOFError
           break # all data read
         end
@@ -30,6 +33,7 @@ module Common
       request
     end
     
+    # generate response using size header from request
     def get_response(request)
       size = request[/Simple-Header-Size\:\ ([0-9]*)/, 1]
       size ||= 10
@@ -39,6 +43,7 @@ module Common
       "\r\n"
     end
     
+    # write to buffer all data
     def handle_response(response)
       loop do
         begin
